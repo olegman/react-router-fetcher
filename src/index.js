@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class FetcherContext extends React.Component {
+class FetcherContext extends React.Component {
     componentWillReceiveProps(nextProps) {
         fetchData(nextProps);
     }
