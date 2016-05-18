@@ -1,9 +1,32 @@
 {
-  "name": "react-redux-data-fetcher",
+  "name": "react-router-fetcher",
+  "description": "Data fetching with react router",
   "version": "0.0.1",
+  "author": {
+    "name": "Oleg Martynov",
+    "email": "olegman.ru@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/olegman/react-router-fetcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olegman/react-router-fetcher.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "watch": "babel ./src/index.js -w -o ./index.js",
+    "transpile": "babel ./src/index.js -o ./index.js",
+    "minify": "uglifyjs ./index.js -o ./index.js -c -m"
+  },
   "dependencies": {
     "react": "0.14.x || 15.x.x"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "uglify-js": "^2.6.2"
   }
 }
-
-
