@@ -1,7 +1,7 @@
 {
   "name": "react-router-fetcher",
   "description": "Data fetching with react router",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Oleg Martynov",
     "email": "olegman.ru@gmail.com"
