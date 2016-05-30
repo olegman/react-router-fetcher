@@ -28,7 +28,7 @@ function fetchData({ props, filter, fetcherContext }) {
 
     // get promises from components in flat array
     props.components.forEach(component => {
-        if (Array.isArray(component.promises)) {
+        if (component && Array.isArray(component.promises)) {
             promises = promises.concat(component.promises);
         }
     });
