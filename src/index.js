@@ -24,7 +24,7 @@ class FetcherContext extends React.Component {
 function fetchData({ props, filter, fetcherContext }) {
     let promises = [];
     let preloadPromises = [];
-    let rawPromises = [];
+    let resultPromises = [];
 
     // get promises from components in flat array
     props.components.forEach(component => {
@@ -36,12 +36,12 @@ function fetchData({ props, filter, fetcherContext }) {
     // filter deferred items
     if (filter) promises = promises.filter(filter);
 
-    // prepare for execution
+    // grouping
     promises.forEach(promise => {
         if (promise.preload) {
-            preloadPromises.push(promise.promise(props))
+            preloadPromises.push(promise)
         } else {
-            rawPromises.push(promise.promise(props))
+            resultPromises.push(promise)
         }
     });
     if (fetcherContext && preloadPromises.length) {
@@ -51,16 +51,43 @@ function fetchData({ props, filter, fetcherContext }) {
     }
 
     // execute promises and return result
-    rawPromises.push(
-        Promise.all(preloadPromises).then(() => {
-            fetcherContext && fetcherContext.setState({
-                canTransition: true
-            });
-        })
-    );
-    return Promise.all(rawPromises).catch(error => console.error('react-router-fetcher error', error));
-    // promises = promises.map(promise => promise.promise(props));
-    // return Promise.all(promises).catch(error => console.error('react-router-fetcher error', error));
+    resultPromises.push({
+        promise: () => (
+            runPromises(preloadPromises, props).then(value => {
+                fetcherContext && fetcherContext.setState({
+                    canTransition: true
+                });
+                return value;
+            })
+        )
+    });
+
+    return runPromises(resultPromises, props).catch(error => {
+        console.error('react-router-fetcher error', error);
+        throw error;
+    });
+}
+
+function runPromises(promises, props) {
+    return new Promise((resolve, reject) => {
+        let pending = promises.length;
+        if (pending == 0) resolve();
+        promises.forEach(promise => {
+            promise.promise(props).then(value => {
+                pending--;
+                if (pending == 0) resolve();
+                return value;
+            }).catch(error => {
+                if (promise.critical) {
+                    reject(error);
+                } else {
+                    pending--;
+                    if (pending == 0) resolve();
+                }
+                throw error;
+            })
+        });
+    });
 }
 
 export function fetchOnServer(props) {
