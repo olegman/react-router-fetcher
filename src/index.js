@@ -8,7 +8,7 @@ class FetcherContext extends React.Component {
         };
     }
     componentWillMount() {
-        fetchData({ props: this.props, filter: item => item.deferred, fetcherContext: this });
+        fetchData({ props: this.props, filter: item => item.deferred, fetcherContext: this, firstLoad: true });
     }
     componentWillReceiveProps(nextProps) {
         fetchData({ props: nextProps, fetcherContext: this });
@@ -21,7 +21,7 @@ class FetcherContext extends React.Component {
     }
 }
 
-function fetchData({ props, filter, fetcherContext }) {
+function fetchData({ props, filter, fetcherContext, firstLoad }) {
     let promises = [];
     let preloadPromises = [];
     let resultPromises = [];
@@ -62,27 +62,35 @@ function fetchData({ props, filter, fetcherContext }) {
         )
     });
 
-    return runPromises(resultPromises, props).catch(error => {
-        console.error('react-router-fetcher error', error);
-        throw error;
-    });
+    return runPromises(resultPromises, props)
+        .then(value => {
+            if (!firstLoad && typeof props.successCb == 'function') props.successCb(value);
+            return value;
+        })
+        .catch(error => {
+            console.error('react-router-fetcher error', error);
+            if (typeof props.errorCb == 'function') props.errorCb(error);
+            throw error;
+        });
 }
 
 function runPromises(promises, props) {
     return new Promise((resolve, reject) => {
         let pending = promises.length;
         if (pending == 0) resolve();
+        function checkAndResolve(value) {
+            pending--;
+            if (pending == 0) resolve(value);
+        }
         promises.forEach(promise => {
             promise.promise(props).then(value => {
-                pending--;
-                if (pending == 0) resolve();
+                checkAndResolve(value);
                 return value;
             }).catch(error => {
                 if (promise.critical) {
                     reject(error);
                 } else {
-                    pending--;
-                    if (pending == 0) resolve();
+                    checkAndResolve(error);
                 }
                 throw error;
             })
