@@ -3,5 +3,5 @@
 [![Latest Stable Version](https://img.shields.io/npm/v/react-router-fetcher.svg?style=flat-square)](https://www.npmjs.com/package/react-router-fetcher)
 [![Dependency Status](https://img.shields.io/david/olegman/react-router-fetcher.svg?style=flat-square)](https://david-dm.org/olegman/react-router-fetcher)
 [![License](https://img.shields.io/npm/l/react-router-fetcher.svg?style=flat-square)](https://www.npmjs.com/package/react-router-fetcher)
-[![NPM Downloads](https://img.shields.io/npm/dm/react-router-fetcher.svg)](https://www.npmjs.com/package/react-router-fetcher)
-[![NPM Downloads](https://img.shields.io/npm/dt/react-router-fetcher.svg)](https://www.npmjs.com/package/react-router-fetcher)
+[![NPM Downloads](https://img.shields.io/npm/dm/react-router-fetcher.svg?style=flat-square)](https://www.npmjs.com/package/react-router-fetcher)
+[![NPM Downloads](https://img.shields.io/npm/dt/react-router-fetcher.svg?style=flat-square)](https://www.npmjs.com/package/react-router-fetcher)
