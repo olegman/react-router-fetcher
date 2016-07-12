@@ -37,11 +37,13 @@ function fetchData({ props, filter, fetcherContext, firstLoad }) {
     if (filter) promises = promises.filter(filter);
 
     // grouping
+    let preloadCritical = false;
     promises.forEach(promise => {
         if (promise.preload) {
-            preloadPromises.push(promise)
+            preloadPromises.push(promise);
+            if (promise.critical) preloadCritical = true;
         } else {
-            resultPromises.push(promise)
+            resultPromises.push(promise);
         }
     });
     if (fetcherContext && preloadPromises.length) {
@@ -59,7 +61,8 @@ function fetchData({ props, filter, fetcherContext, firstLoad }) {
                 });
                 return value;
             })
-        )
+        ),
+        critical: preloadCritical
     });
 
     return runPromises(resultPromises, props)
